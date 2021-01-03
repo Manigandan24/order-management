@@ -1,7 +1,6 @@
 package com.sl.ms.ordermanagement.entity;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity(name = "sl_orders")
 public class Orders {
@@ -22,6 +19,7 @@ public class Orders {
 	@Id
 	@SequenceGenerator(name = "orderseq", sequenceName = "", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderseq")
+	private int ordersid;
 	private int id;
 	private String name;
 	@Column(name = "total_amount")
@@ -72,6 +70,14 @@ public class Orders {
 
 	public void setItems(List<Items> items) {
 		this.items = items;
+	}
+
+	public int getOrdersid() {
+		return ordersid;
+	}
+
+	public void setOrdersid(int ordersid) {
+		this.ordersid = ordersid;
 	}
 
 }
