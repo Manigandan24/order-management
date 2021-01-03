@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,21 +29,29 @@ public class OrderService {
 		Items items = new Items();
 		List<Items> list = new ArrayList<>();
 
-		int quantity = serviceCall.callInventoryMgmt(orderid);
-		if (quantity == 0)
+		Object object = serviceCall.callInventoryMgmt(orderid);
+		if (object instanceof Exception)
 			throw new ItemNotfound();
-		
-		items.setAmount(1.1);
-		items.setPrice(10.1);
-		items.setQuantity(10);
+		else if(object instanceof JSONObject) {
+			try {
+			JSONObject json=(JSONObject)object;
+			items.setName(json.getString("name"));
+			items.setAmount(dto.getTotalAmount());
+			items.setPrice(json.getDouble("price"));
+			items.setQuantity(10);
 
-		orders.setId(orderid);
-		orders.setName(dto.getName());
-		orders.setTotalAmount(dto.getTotalAmount());
-		list.add(items);
-		orders.setItems(list);
+			orders.setId(orderid);
+			orders.setName(dto.getName());
+			orders.setTotalAmount(dto.getTotalAmount());
+			list.add(items);
+			orders.setItems(list);
 
-		orderRepo.save(orders);
+			orderRepo.save(orders);
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 
 	}
 

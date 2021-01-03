@@ -2,14 +2,12 @@ package com.sl.ms.ordermanagement.service;
 
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,7 +24,7 @@ public class ServiceCall {
 	@Value("${rest.token}")
 	private String token;
 
-	public int callInventoryMgmt(int productid) {
+	public Object callInventoryMgmt(int productid) {
 		int quantity = 0;
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(token);
@@ -36,14 +34,11 @@ public class ServiceCall {
 		try {
 			ResponseEntity<Map> ent = restTemplate.exchange(url + "/{productid}", HttpMethod.GET, entity, Map.class,
 					productid);
-			if (ent.getStatusCodeValue() == 200) {
-				JSONObject jsonObject = new JSONObject(ent.getBody());
-				return jsonObject.getInt("quantity");
-			}
+				Object jsonObject = new JSONObject(ent.getBody());
+				return jsonObject;
 		} catch (Exception e) {
-			return quantity;
+			return e;
 		}
-		return quantity;
 	}
 
 }
