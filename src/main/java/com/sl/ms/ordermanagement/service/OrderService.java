@@ -13,6 +13,8 @@ import com.sl.ms.ordermanagement.entity.Items;
 import com.sl.ms.ordermanagement.entity.Orders;
 import com.sl.ms.ordermanagement.exception.ItemNotfound;
 import com.sl.ms.ordermanagement.exception.OrderNotfound;
+import com.sl.ms.ordermanagement.exception.ServiceNotAvailable;
+import com.sl.ms.ordermanagement.logs.OrderMgmtLogger;
 import com.sl.ms.ordermanagement.repo.OrderRepo;
 
 @Service
@@ -23,8 +25,11 @@ public class OrderService {
 
 	@Autowired
 	ServiceCall serviceCall;
+	
+	OrderMgmtLogger logger=new OrderMgmtLogger();
 
 	public void saveOrder(OrderDto dto, int orderid) {
+		String startTime=String.valueOf(System.currentTimeMillis());
 		Orders orders = new Orders();
 		Items items = new Items();
 		List<Items> list = new ArrayList<>();
@@ -32,6 +37,8 @@ public class OrderService {
 		Object object = serviceCall.callInventoryMgmt(orderid);
 		if (object instanceof Exception)
 			throw new ItemNotfound();
+		else if(object.toString().contains("unavailable"))
+			throw new ServiceNotAvailable("Looks like service unavailable. Please try later.");
 		else if(object instanceof JSONObject) {
 			try {
 			JSONObject json=(JSONObject)object;
@@ -47,6 +54,11 @@ public class OrderService {
 			orders.setItems(list);
 
 			orderRepo.save(orders);
+			
+			String endTime=String.valueOf(System.currentTimeMillis());
+			
+			logger.addOrderLogs(startTime, endTime, orders);
+			
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
@@ -56,19 +68,32 @@ public class OrderService {
 	}
 
 	public Orders getOrder(int orderid) {
+		String startTime=String.valueOf(System.currentTimeMillis());
 		Optional<Orders> orders = orderRepo.findById(orderid);
 
-		if (orders.isPresent())
-			return orders.get();
+		if (orders.isPresent()) {
+			String endTime=String.valueOf(System.currentTimeMillis());
+			Orders order=orders.get();
+			logger.addOrderLogs(startTime, endTime, order);
+			return order;
+		}
 		else
 			throw new OrderNotfound();
 	}
 
 	public List<Orders> getOrdersList() {
-		return orderRepo.findAll();
+		String startTime=String.valueOf(System.currentTimeMillis());
+		String endTime=String.valueOf(System.currentTimeMillis());
+		List<Orders> list=orderRepo.findAll();
+		logger.addOrderLogs(startTime, endTime, list);
+		return list;
 	}
 
 	public void deleteOrder(int orderid) {
+		String startTime=String.valueOf(System.currentTimeMillis());
+		String endTime=String.valueOf(System.currentTimeMillis());
+		
+		logger.addOrderLogs(startTime, endTime, "");
 		orderRepo.deleteById(orderid);
 	}
 

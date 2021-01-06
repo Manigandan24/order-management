@@ -13,33 +13,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sl.ms.ordermanagement.dto.OrderDto;
 import com.sl.ms.ordermanagement.entity.Orders;
+import com.sl.ms.ordermanagement.logs.OrderMgmtLogger;
 import com.sl.ms.ordermanagement.service.OrderService;
 
 @RestController
 @RequestMapping("/orders")
 public class Controller {
 	
+	OrderMgmtLogger logger=new OrderMgmtLogger();
+	
 	@Autowired
 	OrderService orderService;
 	
 	@PostMapping(path = "/{order_id}")
 	public String newOrder(@RequestBody OrderDto dto,@PathVariable(name = "order_id") int orderid) {
+		logger.addLogs("inside method newOrder....");
 		orderService.saveOrder(dto,orderid);
+		logger.addLogs("end newOrder....");
 		return "Ordered items";
 	}
 	
 	@GetMapping(path = "/{order_id}")
 	public Orders getOrder(@PathVariable(name = "order_id") int orderid) {
+		logger.addLogs("inside method getOrder....");
 		return orderService.getOrder(orderid);
 	}
 	
-	@GetMapping(path = "/")
+	@GetMapping()
 	public List<Orders> getOrdersList() {
+		logger.addLogs("inside method getOrdersList....");
 		return orderService.getOrdersList();
 	}
 	
 	@DeleteMapping(path = "/{order_id}")
 	public String deleteOrder(@PathVariable(name = "order_id") int orderid) {
+		logger.addLogs("inside method deleteOrder....");
 		orderService.deleteOrder(orderid);
 		return "deleted order successfully";
 	}
