@@ -49,11 +49,6 @@ public class ServiceTest {
 	
 	HttpHeaders httpHeaders =new HttpHeaders();
 	File file;
-	
-	@Test
-	public void contextLoads() {
-		
-	}
 
 	@BeforeEach
 	public void setup() throws Exception {

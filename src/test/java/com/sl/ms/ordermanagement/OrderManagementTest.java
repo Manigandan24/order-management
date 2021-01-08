@@ -163,7 +163,7 @@ public class OrderManagementTest {
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
-		mockMvc.perform(MockMvcRequestBuilders.delete("/orders/1").content(iJosn).headers(httpHeaders)
+		mockMvc.perform(MockMvcRequestBuilders.delete("/orders/1").headers(httpHeaders)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN_VALUE))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("deleted order successfully"));
