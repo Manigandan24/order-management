@@ -28,13 +28,13 @@ public class OrderService {
 	
 	OrderMgmtLogger logger=new OrderMgmtLogger();
 
-	public void saveOrder(OrderDto dto, int orderid) {
+	public void saveOrder(OrderDto dto, int orderid, String token) {
 		String startTime=String.valueOf(System.currentTimeMillis());
 		Orders orders = new Orders();
 		Items items = new Items();
 		List<Items> list = new ArrayList<>();
 
-		Object object = serviceCall.callInventoryMgmt(orderid);
+		Object object = serviceCall.callInventoryMgmt(orderid,token);
 		if (object instanceof Exception)
 			throw new ItemNotfound();
 		else if(object.toString().contains("unavailable"))

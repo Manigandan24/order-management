@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
@@ -47,10 +48,13 @@ public class OrderManagementTest {
 
 	HttpHeaders httpHeaders = new HttpHeaders();
 	File file;
+	
+	@Value("${rest.token}")
+	private String token;
 
 	@Test
 	public void contextLoads() {
-		
+
 	}
 
 	@BeforeEach
@@ -60,12 +64,10 @@ public class OrderManagementTest {
 		file = Paths.get("src", "test", "resources", "orders.json").toFile();
 	}
 
-	/*
-	 * @BeforeEach public void addHeader() { //httpHeaders.add("Authorization",
-	 * headerValue);
-	 * 
-	 * }
-	 */
+	@BeforeEach
+	public void addHeader() {
+		httpHeaders.add("Authorization", token);
+	}
 
 	@AfterEach
 	public void dropDB() {
@@ -76,6 +78,7 @@ public class OrderManagementTest {
 	@Test
 	@DisplayName(value = "Test - Save New Order")
 	public void newOrderTest() throws Exception {
+		
 		OrderDto dto = new OrderDto();
 		dto.setName("Item1");
 		dto.setTotalAmount(120.98);

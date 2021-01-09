@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,6 +48,9 @@ public class ServiceTest {
 	@MockBean
 	OrderRepo orderRepo;
 	
+	@Value("${rest.token}")
+	private String token;
+	
 	HttpHeaders httpHeaders =new HttpHeaders();
 	File file;
 
@@ -64,10 +68,10 @@ public class ServiceTest {
 		dto.setName("Order1");
 		dto.setTotalAmount(120.12);
 		
-		Mockito.doNothing().when(service).saveOrder(Mockito.isA(OrderDto.class), Mockito.isA(Integer.class));
-		service.saveOrder(dto, 1);
+		Mockito.doNothing().when(service).saveOrder(Mockito.isA(OrderDto.class), Mockito.isA(Integer.class),Mockito.isA(String.class));
+		service.saveOrder(dto, 1,token);
 		
-		Mockito.verify(service).saveOrder(dto, 1);
+		Mockito.verify(service).saveOrder(dto, 1,token);
 	}
 	
 	@Test

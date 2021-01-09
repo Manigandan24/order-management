@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,9 +27,9 @@ public class Controller {
 	OrderService orderService;
 	
 	@PostMapping(path = "/{order_id}")
-	public String newOrder(@RequestBody OrderDto dto,@PathVariable(name = "order_id") int orderid) {
+	public String newOrder(@RequestBody OrderDto dto,@PathVariable(name = "order_id") int orderid,@RequestHeader("Authorization") String token) {
 		logger.addLogs("inside method newOrder....");
-		orderService.saveOrder(dto,orderid);
+		orderService.saveOrder(dto,orderid,token);
 		logger.addLogs("end newOrder....");
 		return "Ordered items";
 	}

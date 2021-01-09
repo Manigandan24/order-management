@@ -29,11 +29,11 @@ public class ServiceCall {
 	@Value("${rest.url}")
 	private String url;
 
-	@Value("${rest.token}")
-	private String token;
+	//@Value("${rest.token}")
+	//private String token;
 
 	@HystrixCommand(fallbackMethod = "defaultError")
-	public Object callInventoryMgmt(int productid) {
+	public Object callInventoryMgmt(int productid, String token) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(token);
 
@@ -48,7 +48,7 @@ public class ServiceCall {
 		}*/
 	}
 
-	public Object defaultError(int productid) {
+	public Object defaultError(int productid, String token) {
 		String err = "Looks like service unavailable. Please try later.";
 		return err;
 	}
