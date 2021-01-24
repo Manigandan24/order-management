@@ -71,7 +71,7 @@ spec:
 		sh 'pwd'
 		sh 'ls -ltr'
 		sh '''#!/busybox/sh
-        /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=false --verbosity=debug --destination=skmani2/order-management:v2
+        /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=false --destination=skmani2/order-management:v2
 		'''
       }
 	}
